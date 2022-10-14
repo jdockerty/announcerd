@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 
 	"github.com/google/go-github/v47/github"
+	"github.com/jdockerty/announcerd/pkg/announcerd"
 )
 
-func PullRequestEventHandler(w http.ResponseWriter, req *http.Request) {
+func PullRequestEventHandler(w http.ResponseWriter, req *http.Request, client *github.Client) {
 
 	var event github.PullRequestEvent
 
@@ -25,15 +25,11 @@ func PullRequestEventHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if action := event.GetAction(); action == "opened" || action == "reopened" {
-		fmt.Println("PR OPENED!")
 
-		b, a, f := strings.Cut(*event.PullRequest.Body, "announcement=")
-		if f {
-			fmt.Printf("BEFORE: %s\n", b)
-			fmt.Printf("AFTER: %s\n", a)
-		} else {
-			fmt.Println("announcement= not found in msg")
-		}
+        msg := announcerd.ParseAnnouncement(*event.PullRequest.Body)
+
+        fmt.Println("PARSED BODY:", msg)
+        // Send to slack
 	}
 
 }
