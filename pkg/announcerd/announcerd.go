@@ -47,7 +47,7 @@ func (a *Announcerd) AnnounceViaWebhook(c *config.Config, msg string) error {
 	return nil
 }
 
-// IsValidAnnouncement is our simplistic criteria for an announcement being valid, i.e. not blank.
+// IsValidAnnouncement is our simplistic criteria for an announcement being valid, after being parsed, i.e. not a blank string.
 func IsValidAnnouncement(s string) bool {
 	return s != ""
 }
