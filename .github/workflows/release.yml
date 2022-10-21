@@ -1,12 +1,15 @@
 name: Create release 
 on:
-  push: 
+  push:
+    branches:
+      - 'release/**'
     tags:
       - 'v*'
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+jobs:
   create-release:
     runs-on: ubuntu
     permissions:
@@ -14,7 +17,7 @@ env:
       packages: write
     steps:
 
- 	  - name: Log in to the Container registry
+      - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           registry: ${{ env.REGISTRY }}
@@ -22,7 +25,7 @@ env:
           password: ${{ secrets.GITHUB_TOKEN }} 
 
       - name: Extract metadata (tags, labels) for Docker
-        id: meta
+        id: metadata
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -32,5 +35,5 @@ env:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
