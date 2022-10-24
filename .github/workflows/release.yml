@@ -10,7 +10,7 @@ env:
 
 jobs:
   create-release:
-    if: github.event.base_ref=='refs/heads/main'
+    #if: github.event.base_ref=='refs/heads/main'
     runs-on: ubuntu
     permissions:
       contents: read
