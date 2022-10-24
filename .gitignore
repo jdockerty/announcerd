@@ -16,3 +16,5 @@
 
 # Local files for development
 local/*
+
+dist/
