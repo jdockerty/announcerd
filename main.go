@@ -12,10 +12,11 @@ import (
 )
 
 var (
-    healthy = []byte(`{
+	healthy = []byte(`{
         "status": "ok"
     }`)
 )
+
 func PullRequestEventHandler(w http.ResponseWriter, req *http.Request, conf *config.Config) error {
 
 	var event github.PullRequestEvent
@@ -55,9 +56,10 @@ func main() {
 		return
 	}
 
-    http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-        w.Write(healthy)
-    })
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(healthy)
+	})
 
 	http.HandleFunc("/pulls", func(w http.ResponseWriter, req *http.Request) {
 		err := PullRequestEventHandler(w, req, c)
