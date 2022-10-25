@@ -11,6 +11,11 @@ import (
 	"github.com/jdockerty/announcerd/pkg/config"
 )
 
+var (
+    healthy = []byte(`{
+        "status": "ok"
+    }`)
+)
 func PullRequestEventHandler(w http.ResponseWriter, req *http.Request, conf *config.Config) error {
 
 	var event github.PullRequestEvent
@@ -49,6 +54,10 @@ func main() {
 		fmt.Printf("could not create configuration: %s\n", err)
 		return
 	}
+
+    http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+        w.Write(healthy)
+    })
 
 	http.HandleFunc("/pulls", func(w http.ResponseWriter, req *http.Request) {
 		err := PullRequestEventHandler(w, req, c)
